@@ -21,17 +21,16 @@
         return;
       }
       try {
-        // Request account access
         await window.ethereum.request({ method: 'eth_requestAccounts' });
-        // Create an ethers.js provider using MetaMask's provider
+     
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        // Ensure we're on Holesky Testnet (chainId 17000)
+
         const network = await provider.getNetwork();
         if (network.chainId !== 17000) {
           alert('Please switch MetaMask to the Holesky Testnet (chainId 17000).');
           return;
         }
-        // Fetch the latest block number
+
         const blockNumber = await provider.getBlockNumber();
         output.textContent = `Current Holesky block height: ${blockNumber}`;
       } catch (err) {
