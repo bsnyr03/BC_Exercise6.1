@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Holesky Block Height Viewer</title>
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" integrity="sha384-MW+n0lTPWa1I08G36O3l1z1DNvMgssSXiT/4UO9O9GZoKXXTHmXrf2acdq8fmhUX" crossorigin="anonymous"></script>
+</head>
+<body style="font-family: Arial, sans-serif; padding: 2rem;">
+  <h1>Holesky Block Height Viewer</h1>
+  <button id="getBlockBtn" style="padding: 0.5rem 1rem; font-size: 1rem;">Show Current Block Height</button>
+  <p id="blockNumber" style="margin-top: 1rem; font-size: 1.2rem;"></p>
+
+  <script>
+    const btn = document.getElementById('getBlockBtn');
+    const output = document.getElementById('blockNumber');
+
+    btn.addEventListener('click', async () => {
+      if (!window.ethereum) {
+        alert('MetaMask not detected. Please install MetaMask.');
+        return;
+      }
+      try {
+        // Request account access
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        // Create an ethers.js provider using MetaMask's provider
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        // Ensure we're on Holesky Testnet (chainId 17000)
+        const network = await provider.getNetwork();
+        if (network.chainId !== 17000) {
+          alert('Please switch MetaMask to the Holesky Testnet (chainId 17000).');
+          return;
+        }
+        // Fetch the latest block number
+        const blockNumber = await provider.getBlockNumber();
+        output.textContent = `Current Holesky block height: ${blockNumber}`;
+      } catch (err) {
+        console.error(err);
+        output.textContent = 'Error fetching block height.';
+      }
+    });
+  </script>
+</body>
+</html>
